@@ -1,5 +1,13 @@
 package main
 
+import (
+	"encoding/json"
+	"math/rand"
+	"time"
+)
+
+const charset = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`
+
 // CloudEvent is the CloudEvent envelope
 type CloudEvent struct {
 	CloudEventMeta
@@ -16,7 +24,7 @@ type CloudEventMeta struct {
 	Subject         string `json:"subject"`
 }
 
-func makeCloudEvent(dataSize int) *CloudEvent {
+func getCloudEventContent(dataSize int) []byte {
 	ce := &CloudEvent{
 		Data: getRandomBytes(dataSize),
 	}
@@ -25,5 +33,15 @@ func makeCloudEvent(dataSize int) *CloudEvent {
 	ce.Type = "com.dapr.event.sent"
 	ce.SpecVersion = "v1.0"
 	ce.DataContentType = "application/cloudevents+json"
-	return ce
+	c, _ := json.Marshal(ce)
+	return c
+}
+
+func getRandomBytes(length int) []byte {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[r.Intn(len(charset))]
+	}
+	return b
 }

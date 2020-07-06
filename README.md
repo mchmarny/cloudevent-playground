@@ -4,15 +4,16 @@ Simple test on the unmarshalling gains when you only need the metadata of [Cloud
 
 
 ```shell
-make run 
+make bench 
 
-48.83% faster with      100 bytes data (w:   52652, wo:   25712)
-82.76% faster with      100 bytes data (w:    8699, wo:    7199)
-84.99% faster with     1000 bytes data (w:   21390, wo:   18179)
-83.69% faster with    10000 bytes data (w:  156117, wo:  130660)
-80.88% faster with   100000 bytes data (w: 1300480, wo: 1051816)
-73.66% faster with  1000000 bytes data (w: 7753188, wo: 5710777)
-73.85% faster with 10000000 bytes data (w:71495854, wo:52796504)
+BenchmarkUnmarshalSmallContentWithData-8       	1000000000	         0.000019 ns/op
+BenchmarkUnmarshalSmallContentWithoutData-8    	1000000000	         0.000015 ns/op
+BenchmarkUnmarshalMediumContentWithData-8      	1000000000	         0.000793 ns/op
+BenchmarkUnmarshalMediumContentWithoutData-8   	1000000000	         0.000711 ns/op
+BenchmarkUnmarshalLargeContentWithData-8       	1000000000	         0.0674 ns/op
+BenchmarkUnmarshalLargeContentWithoutData-8    	1000000000	         0.0564 ns/op
+PASS
+ok  	github.com/mchmarny/cloudevent-playground	2.261s
 ```
 
 ```go

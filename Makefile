@@ -7,8 +7,8 @@ mod: ## Updates the go modules and vendors all dependencies
 test: mod ## Tests the entire project 
 	go test -count=1 -race ./...
 
-run: mod ## Runs the uncompiled code
-	go run rand.go event.go main.go 
+bench: mod ## Benchmarks the entire project (no test)
+	go test -run=XXX -bench=. -benchtime=20s
 
 lint: ## Lints the entire project 
 	golangci-lint run --timeout=3m
