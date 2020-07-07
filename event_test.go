@@ -26,26 +26,41 @@ func bench(i int, t interface{}, b *testing.B) {
 	_ = json.Unmarshal(c, t)
 }
 
-func BenchmarkUnmarshalSmallContentWithData(b *testing.B) {
+func BenchmarkSmall(b *testing.B) {
+	var t interface{}
+	bench(smallContent, &t, b)
+}
+
+func BenchmarkSmallWithData(b *testing.B) {
 	bench(smallContent, &CloudEvent{}, b)
 }
 
-func BenchmarkUnmarshalSmallContentWithoutData(b *testing.B) {
+func BenchmarkSmallWithoutData(b *testing.B) {
 	bench(smallContent, &CloudEventMeta{}, b)
 }
 
-func BenchmarkUnmarshalMediumContentWithData(b *testing.B) {
+func BenchmarkMedium(b *testing.B) {
+	var t interface{}
+	bench(mediumContent, &t, b)
+}
+
+func BenchmarkMediumWithData(b *testing.B) {
 	bench(mediumContent, &CloudEvent{}, b)
 }
 
-func BenchmarkUnmarshalMediumContentWithoutData(b *testing.B) {
+func BenchmarkMediumWithoutData(b *testing.B) {
 	bench(mediumContent, &CloudEventMeta{}, b)
 }
 
-func BenchmarkUnmarshalLargeContentWithData(b *testing.B) {
+func BenchmarkLarge(b *testing.B) {
+	var t interface{}
+	bench(largeContent, &t, b)
+}
+
+func BenchmarkLargeWithData(b *testing.B) {
 	bench(largeContent, &CloudEvent{}, b)
 }
 
-func BenchmarkUnmarshalLargeContentWithoutData(b *testing.B) {
+func BenchmarkLargeWithoutData(b *testing.B) {
 	bench(largeContent, &CloudEventMeta{}, b)
 }
