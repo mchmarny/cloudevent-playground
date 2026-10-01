@@ -3,10 +3,14 @@ package main
 import (
 	"encoding/json"
 	"math/rand"
+	"sync"
 	"time"
 )
 
 const charset = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`
+
+// sharedRand is reused across calls so a burst of events does not reseed per call.
+var sharedRand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 // CloudEvent is the CloudEvent envelope
 type CloudEvent struct {
@@ -37,11 +41,32 @@ func getCloudEventContent(dataSize int) []byte {
 	return c
 }
 
+// getCloudEvents builds n events concurrently.
+func getCloudEvents(n, dataSize int) [][]byte {
+	out := make([][]byte, n)
+	var wg sync.WaitGroup
+	for i := 0; i < n; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			out[i] = getCloudEventContent(dataSize)
+		}()
+	}
+	wg.Wait()
+	return out
+}
+
+// parseCloudEvent decodes an event produced by getCloudEventContent.
+func parseCloudEvent(b []byte) *CloudEvent {
+	var ce CloudEvent
+	json.Unmarshal(b, &ce)
+	return &ce
+}
+
 func getRandomBytes(length int) []byte {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	b := make([]byte, length)
 	for i := range b {
-		b[i] = charset[r.Intn(len(charset))]
+		b[i] = charset[sharedRand.Intn(len(charset))]
 	}
 	return b
 }
